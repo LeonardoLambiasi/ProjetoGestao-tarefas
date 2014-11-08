@@ -1,0 +1,41 @@
+<html>
+<head>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script>
+        $(document).ready(function() {
+            $.ajax({
+                url: "http://localhost:9090/list",
+                crossdomain:true,
+                success: function(data){
+                    $('#tabela').append(data);
+                }
+            });
+
+            $("#btnOk").click(function() {
+                var ddd = $("#nomeTarefa").val();
+                if (ddd == "") {
+                    alert('Informe um nome.');
+                }
+                else {
+                    $.ajax({
+                        url: "http://localhost:9090/add",
+                        crossdomain:true,
+                        type: "POST",
+                        data: "name=" + ddd,
+                        success: function(data){
+                            $("#nomeTarefa").val("");
+                            location.href = 'http://localhost:9090/'
+                        }
+                    });
+                }
+            });
+        });
+	</script>
+</head>
+<body>
+	<input type="text" id="nomeTarefa" />
+	<button id="btnOk">Ok</button><br/>
+	<p>Lista das atividades</p><br/>
+	<div id="tabela">
+	</div>
+</html>
