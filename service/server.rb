@@ -25,8 +25,9 @@ end
 
 post '/postits' do
     @name = params[:name]
-    File.open('dados.txt', 'a') do |f|
-        f << @name << "\n"
-    end
+    db.execute("INSERT INTO postit (name) 
+                VALUES (?)", [@name])
     200
 end
+
+
