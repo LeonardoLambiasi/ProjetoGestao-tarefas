@@ -5,7 +5,7 @@ describe DashBoardTODO do
 	dashBoardTODO = DashBoardTODO.new
 	addedPostit = dashBoardTODO.add 'A3'
 
-	addedPostit.name.should match('A3')
+	expect(addedPostit.name).to eq('A3')
     end
 end
 
