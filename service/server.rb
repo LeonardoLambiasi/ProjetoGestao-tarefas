@@ -23,14 +23,22 @@ get '/postits' do
     postits = []
     db.results_as_hash = true
     rows = db.execute("SELECT id, name FROM postit")
-    rows.to_json
+    rows.each do |row|
+        puts row
+        postits.push({:name => row["name"], :id => row["id"]})
+    end
+    response = 404
+    response = postits.to_json if postits.size > 0
+    response
 end
 
 post '/postits' do
-    @name = params[:name]
-    db.execute("INSERT INTO postit (name) 
-                VALUES (?)", [@name])
-    200
+    request.body.rewind
+    postit = JSON.parse request.body.read
+    db.execute("INSERT INTO postit (name) VALUES (?)", [postit["name"]])
+    rows = db.execute("SELECT id FROM postit WHERE name=? ORDER BY id DESC LIMIT ?", [postit["name"], 1])
+    postit["id"] = rows[0][0]
+    postit.to_json
 end
 
 
