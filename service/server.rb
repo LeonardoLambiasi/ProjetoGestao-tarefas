@@ -19,12 +19,13 @@ get '/' do
 end
 
 get '/postits' do
-    activities = File.open("dados.txt", "r"){ |file| file.read }
-    activities
+    postits = []
     stm = db.prepare "SELECT name FROM postit"
     rs = stm.execute
-    row = rs.next
-    row.join " "
+    while (row = rs.next) do
+        postits.push(row.join "")
+    end
+    postits.join ";"
 end
 
 post '/postits' do
