@@ -7,7 +7,11 @@
                 url: "http://localhost:9090/postits",
                 crossdomain:true,
                 success: function(data){
-                    $('#tabela').append(data);
+                    postits = eval(data);
+                    $.each(postits, function(key, postit) {
+                        $('#tabela').append(postit.name);
+                        $('#tabela').append("<br/>");
+                    });
                 }
             });
 
@@ -17,11 +21,12 @@
                     alert('Informe um nome.');
                 }
                 else {
+                    request_body = JSON.stringify({"name":ddd})
                     $.ajax({
                         url: "http://localhost:9090/postits",
                         crossdomain:true,
                         type: "POST",
-                        data: "name=" + ddd,
+                        data: request_body ,
                         success: function(data){
                             $("#nomeTarefa").val("");
                             location.href = 'http://localhost:9090/'

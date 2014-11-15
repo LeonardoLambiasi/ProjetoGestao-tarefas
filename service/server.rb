@@ -1,6 +1,8 @@
 require 'sinatra'
+require 'sinatra/json'
 require 'sqlite3'
 require 'json'
+require './postit'
 
 set :port, 9090
 set :bind, '0.0.0.0'
@@ -22,7 +24,7 @@ end
 get '/postits' do
     postits = []
     db.results_as_hash = true
-    rows = db.execute("SELECT id, name FROM postit")
+    rows = db.execute("SELECT id, name FROM postit ORDER BY id")
     rows.each do |row|
         puts row
         postits.push({:name => row["name"], :id => row["id"]})
@@ -34,11 +36,16 @@ end
 
 post '/postits' do
     request.body.rewind
-    postit = JSON.parse request.body.read
-    db.execute("INSERT INTO postit (name) VALUES (?)", [postit["name"]])
-    rows = db.execute("SELECT id FROM postit WHERE name=? ORDER BY id DESC LIMIT ?", [postit["name"], 1])
-    postit["id"] = rows[0][0]
+    request_body = JSON.parse request.body.read
+
+    postit = Postit.new
+    postit.name = request_body["name"]
+    
+    db.execute("INSERT INTO postit (name) VALUES (?)", [postit.name])
+    rows = db.execute("SELECT id FROM postit WHERE name=? ORDER BY id DESC LIMIT ?", [postit.name, 1])
+
+    postit.id = rows[0][0]
+    response.headers['Content-Type'] = 'application/json'
     postit.to_json
 end
-
 
