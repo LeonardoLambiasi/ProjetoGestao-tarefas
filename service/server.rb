@@ -21,12 +21,9 @@ end
 
 get '/postits' do
     postits = []
-    stm = db.prepare "SELECT name FROM postit"
-    rs = stm.execute
-    while (row = rs.next) do
-        postits.push(row.join "")
-    end
-    postits.to_json
+    db.results_as_hash = true
+    rows = db.execute("SELECT id, name FROM postit")
+    rows.to_json
 end
 
 post '/postits' do
