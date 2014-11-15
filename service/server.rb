@@ -21,6 +21,10 @@ end
 get '/postits' do
     activities = File.open("dados.txt", "r"){ |file| file.read }
     activities
+    stm = db.prepare "SELECT name FROM postit"
+    rs = stm.execute
+    row = rs.next
+    row.join " "
 end
 
 post '/postits' do
