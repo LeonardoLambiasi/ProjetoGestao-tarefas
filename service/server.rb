@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'sqlite3'
+require 'json'
 
 set :port, 9090
 set :bind, '0.0.0.0'
@@ -25,7 +26,7 @@ get '/postits' do
     while (row = rs.next) do
         postits.push(row.join "")
     end
-    postits.join ";"
+    postits.to_json
 end
 
 post '/postits' do
