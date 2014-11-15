@@ -1,4 +1,4 @@
-require '../src/classes'
+require File.expand_path('../../src/classes', __FILE__)
 
 describe DashBoardTODO do
     it "Should include a postit with name A3" do
